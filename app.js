@@ -12,7 +12,7 @@ window.addEventListener('load',()=>{
         navigator.geolocation.getCurrentPosition(async function(position){
             long=position.coords.longitude;
             lat =position.coords.latitude;
-            const url=`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=72c01f97f09a129f74d730a4a6999ab1`; 
+            const url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=72c01f97f09a129f74d730a4a6999ab1`; 
             fetchWeather(url)   
         });
     }
@@ -21,7 +21,7 @@ window.addEventListener('load',()=>{
 cityButton.addEventListener('click',async function(){
     let cityname = cityinput.value;
     if(cityname!=''){
-        const url_city=`http://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=72c01f97f09a129f74d730a4a6999ab1`;
+        const url_city=`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=72c01f97f09a129f74d730a4a6999ab1`;
         console.log('from if cityname')
         fetchWeather(url_city);
     }
