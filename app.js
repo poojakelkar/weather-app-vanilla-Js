@@ -1,29 +1,49 @@
+let cityinput=document.querySelector('#cityname');
+let cityButton=document.querySelector('#cityButton');
+let temperatureDescription=document.querySelector('.temperature-description');
+let temperatureDegree=document.querySelector('.temperature-degree');
+let locationTimezone=document.querySelector('.location-timezone');
+let tempCategory=document.querySelector('.tempcategory');
+
 window.addEventListener('load',()=>{
     let long;
     let lat;
-    let temperatureDescription=document.querySelector('.temperature-description');
-    let temperatureDegree=document.querySelector('.temperature-degree');
-    let locationTimezone=document.querySelector('.location-timezone');
-
     if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(position=>{
+        navigator.geolocation.getCurrentPosition(async function(position){
             long=position.coords.longitude;
-
-            const proxy='https://cors-anywhere.herokuapp.com/';
-            const api=`${proxy}72c01f97f09a129f74d730a4a6999ab1/${lat},${long}`;
-            fetch(api).then(response=>{
-                return response.json();
-            }).then(data=>{
-                
-                const {temperature,summary,icon}=data.currently;
-                temperatureDegree.textContent=temperature;
-                temperatureDescription.textContent=summary;
-                locationTimezone.textContent=data.timezone;
-                setIcons(icon,document.querySelector(".icon"));
-            });
-        
+            lat =position.coords.latitude;
+            const url=`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=72c01f97f09a129f74d730a4a6999ab1`; 
+            fetchWeather(url)   
         });
-       
+    }
+})
 
+cityButton.addEventListener('click',async function(){
+    let cityname = cityinput.value;
+    if(cityname!=''){
+        const url_city=`http://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=72c01f97f09a129f74d730a4a6999ab1`;
+        console.log('from if cityname')
+        fetchWeather(url_city);
     }
 });
+
+
+    async function  fetchWeather(url){
+    const response = await fetch(url);
+    const data = await response.json();
+
+    console.log(data);
+    const { name, weather, main:{temp} } = data;
+    temperatureDegree.innerText=(temp-273.15).toFixed(1);
+    temperatureDescription.innerText=weather[0].description;
+    locationTimezone.innerText=name;
+    document.querySelector(".icon").src = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`
+    if((temp-273.15).toFixed(1)<=20){
+        tempCategory.innerText = "COOL"
+    }else if((temp-273.15).toFixed(1)<=30){
+        tempCategory.innerText="MEDIUM";
+    }else{
+        tempCategory.innerText="HOT"
+    }
+
+}
