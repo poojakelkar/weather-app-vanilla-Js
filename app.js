@@ -29,6 +29,8 @@ cityButton.addEventListener('click',async function(){
 
 
     async function  fetchWeather(url){
+        let proxy = 'https://cors-anywhere.herokuapp.com/'
+        url = proxy+url;
     const response = await fetch(url);
     const data = await response.json();
 
